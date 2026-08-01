@@ -1,0 +1,270 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover" />
+<title>Constellation for Pranjali &mdash; Happy Friendship Day</title>
+<meta name="description" content="A star-charted friendship day journey for Pranjali Singh" />
+
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Fraunces:ital,opsz,wght@0,9..144,300;0,9..144,500;0,9..144,600;1,9..144,400;1,9..144,500&family=Manrope:wght@400;500;600;700;800&family=JetBrains+Mono:wght@400;500&display=swap" rel="stylesheet">
+
+<link rel="stylesheet" href="style.css" />
+</head>
+<body>
+
+<!-- ============ CUSTOM CURSOR ============ -->
+<div class="cursor-dot" aria-hidden="true"></div>
+<div class="cursor-ring" aria-hidden="true"></div>
+
+<!-- ============ PERSISTENT SKY CANVAS ============ -->
+<canvas id="sky-canvas" aria-hidden="true"></canvas>
+<div class="grain" aria-hidden="true"></div>
+
+<!-- ============ LOADER ============ -->
+<div id="loader" class="loader">
+  <div class="loader-inner">
+    <svg class="loader-star" width="46" height="46" viewBox="0 0 46 46" fill="none">
+      <path d="M23 2 L27 19 L44 23 L27 27 L23 44 L19 27 L2 23 L19 19 Z" fill="#F2B441"/>
+    </svg>
+    <p class="loader-label">charting a sky for pranjali</p>
+    <div class="loader-track"><div class="loader-fill" id="loader-fill"></div></div>
+    <p class="loader-percent"><span id="loader-percent-num">0</span>%</p>
+  </div>
+</div>
+
+<!-- ============ PROGRESS RAIL ============ -->
+<nav class="rail" id="rail" aria-hidden="true">
+  <button class="rail-dot" data-target="welcome" aria-label="Welcome"></button>
+  <button class="rail-dot" data-target="gate" aria-label="Gate"></button>
+  <button class="rail-dot" data-target="questions" aria-label="Questions"></button>
+  <button class="rail-dot" data-target="envelope" aria-label="Envelope"></button>
+  <button class="rail-dot" data-target="letter" aria-label="Letter"></button>
+  <button class="rail-dot" data-target="gallery" aria-label="Gallery"></button>
+  <button class="rail-dot" data-target="meter" aria-label="Meter"></button>
+  <button class="rail-dot" data-target="secret" aria-label="Finale"></button>
+</nav>
+
+<!-- ============ MUSIC TOGGLE ============ -->
+<button id="music-toggle" class="music-toggle" aria-label="Toggle music">
+  <svg id="music-icon-play" width="18" height="18" viewBox="0 0 24 24" fill="none"><path d="M8 5v14l11-7-11-7z" fill="currentColor"/></svg>
+  <svg id="music-icon-pause" width="18" height="18" viewBox="0 0 24 24" fill="none" style="display:none"><path d="M7 5h4v14H7zM13 5h4v14h-4z" fill="currentColor"/></svg>
+  <span class="music-bars"><i></i><i></i><i></i></span>
+</button>
+<audio id="bg-music" loop preload="none">
+  <source src="music.mp3" type="audio/mpeg" />
+</audio>
+
+<main id="main">
+
+  <!-- ============ WELCOME ============ -->
+  <section id="welcome" class="scene" data-scene>
+    <div class="scene-inner welcome-inner">
+      <p class="eyebrow" data-reveal>star catalog &middot; entry no. 07</p>
+      <h1 class="display-xl" data-reveal>
+        <span class="line">Somewhere in the noise</span>
+        <span class="line">of ordinary days,</span>
+        <span class="line accent">one constant kept glowing.</span>
+      </h1>
+      <p class="lede" data-reveal>
+        This is a small sky, built star by star, for one person who never needed
+        a reason to matter &mdash; <strong>Pranjali Singh</strong>.
+      </p>
+      <button class="btn-primary" id="begin-btn" data-reveal>
+        <span>Begin the chart</span>
+        <svg width="16" height="16" viewBox="0 0 16 16" fill="none"><path d="M3 8h10M9 4l4 4-4 4" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round"/></svg>
+      </button>
+      <div class="scroll-cue" aria-hidden="true"><span></span></div>
+    </div>
+  </section>
+
+  <!-- ============ FUNNY GATE ============ -->
+  <section id="gate" class="scene" data-scene>
+    <div class="scene-inner gate-inner">
+      <p class="eyebrow" data-reveal>a small toll before the sky opens</p>
+      <h2 class="display-lg" data-reveal>Prove you're really her best friend.</h2>
+      <p class="lede" data-reveal id="gate-copy">Tap the button below. Should be easy, right?</p>
+
+      <div class="gate-stage">
+        <button class="btn-dodge" id="dodge-btn">I dare you to click me</button>
+      </div>
+      <p class="gate-hint" id="gate-hint">attempts: <span id="dodge-count">0</span></p>
+      <button class="btn-ghost" id="gate-give-up" style="display:none">okay okay, let me in anyway →</button>
+    </div>
+  </section>
+
+  <!-- ============ QUESTIONS ============ -->
+  <section id="questions" class="scene" data-scene>
+    <div class="scene-inner questions-inner">
+      <p class="eyebrow" data-reveal>three quick truths</p>
+      <h2 class="display-lg" data-reveal>Every star needs a little proof of light.</h2>
+
+      <div class="quiz" id="quiz">
+        <div class="quiz-card" data-q="1">
+          <p class="quiz-q">1 / 3 &mdash; How many years of chaos have you two survived together?</p>
+          <div class="quiz-options">
+            <button data-glow="12">Feels like forever</button>
+            <button data-glow="8">A solid few</button>
+            <button data-glow="5">Still counting, still going</button>
+          </div>
+        </div>
+        <div class="quiz-card" data-q="2" hidden>
+          <p class="quiz-q">2 / 3 &mdash; What's the most "us" thing you two do?</p>
+          <div class="quiz-options">
+            <button data-glow="12">Talk about nothing for hours</button>
+            <button data-glow="9">Send memes at 2am</button>
+            <button data-glow="7">Argue about the dumbest things</button>
+          </div>
+        </div>
+        <div class="quiz-card" data-q="3" hidden>
+          <p class="quiz-q">3 / 3 &mdash; If He disappeared for a week, you would&hellip;</p>
+          <div class="quiz-options">
+            <button data-glow="14">Text her twenty times, no shame</button>
+            <button data-glow="10">Show up at her door</button>
+            <button data-glow="8">Quietly panic and pretend you're fine</button>
+          </div>
+        </div>
+      </div>
+      <p class="quiz-done" id="quiz-done" hidden>Truths logged. The sky is getting brighter. ✨</p>
+    </div>
+  </section>
+
+  <!-- ============ ENVELOPE ============ -->
+  <section id="envelope" class="scene" data-scene>
+    <div class="scene-inner envelope-inner">
+      <p class="eyebrow" data-reveal>one thing, kept safe until now</p>
+      <h2 class="display-lg" data-reveal>Something's been waiting for you.</h2>
+
+      <div class="envelope-wrap" id="envelope-wrap">
+        <div class="envelope" id="envelope-obj">
+          <div class="envelope-back"></div>
+          <div class="envelope-letter-peek"></div>
+          <div class="envelope-flap"></div>
+          <div class="envelope-front"></div>
+          <div class="envelope-seal" id="envelope-seal">
+            <svg width="22" height="22" viewBox="0 0 22 22" fill="none"><path d="M11 3.5C9 1 4 2 4 6.5c0 4 5 8 7 9.5 2-1.5 7-5.5 7-9.5 0-4.5-5-5.5-7-3Z" fill="#0A0E27"/></svg>
+          </div>
+        </div>
+        <p class="envelope-hint">click the seal to open</p>
+      </div>
+    </div>
+  </section>
+
+  <!-- ============ LETTER ============ -->
+  <section id="letter" class="scene" data-scene>
+    <div class="scene-inner letter-inner">
+      <div class="letter-paper" id="letter-paper">
+        <p class="letter-mark">for pranjali</p>
+        <div class="letter-body" id="letter-body">
+          <p data-line>Tumhare saath baat karne ke liye koi reason nahi chahiye&hellip;</p>
+          <p data-line>Kyuki tum wo ho jiske saath normal si conversation bhi special feel hoti hai. 🤍</p>
+          <p data-line>Distance, time ya busy schedules kuch bhi ho&hellip;</p>
+          <p data-line>Kuch log kabhi "less important" nahi hote.</p>
+          <p data-line class="emph">Tum mere liye wo ho. ❤️✨</p>
+          <p data-line>Life me sab kuch perfect ho ye zaroori nahi&hellip;</p>
+          <p data-line>Lekin ek genuine best friend ho,</p>
+          <p data-line>to har problem thodi si easy lagne lagti hai.</p>
+          <p data-line class="emph">Thank you for always being you. 💕</p>
+          <p data-line class="signoff">Happy Friendship Day Yaara ❤️✨</p>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- ============ GALLERY / CONSTELLATION ============ -->
+  <section id="gallery" class="scene" data-scene>
+    <div class="scene-inner gallery-inner">
+      <p class="eyebrow" data-reveal>five moments, five stars</p>
+      <h2 class="display-lg" data-reveal>Tap each one. Watch the sky remember.</h2>
+
+      <div class="constellation" id="constellation">
+        <svg class="constellation-lines" id="constellation-lines" preserveAspectRatio="none"></svg>
+        <button class="star-node" data-star="1" data-quote="The friend who makes ordinary Tuesdays feel like an event." style="--x:14%; --y:20%"><img data-photo="photo1" alt="Memory one" /></button>
+        <button class="star-node" data-star="2" data-quote="The one text that turns a bad day around, every single time." style="--x:70%; --y:12%"><img data-photo="photo2" alt="Memory two" /></button>
+        <button class="star-node" data-star="3" data-quote="Proof that some people just fit, no explanation needed." style="--x:38%; --y:52%"><img data-photo="photo3" alt="Memory three" /></button>
+        <button class="star-node" data-star="4" data-quote="Every inside joke, saved for later, used at the worst possible moment." style="--x:82%; --y:60%"><img data-photo="photo4" alt="Memory four" /></button>
+        <button class="star-node" data-star="5" data-quote="The friendship that never once needed a reason to feel special." style="--x:20%; --y:82%"><img data-photo="photo5" alt="Memory five" /></button>
+      </div>
+      <p class="constellation-quote" id="constellation-quote">tap a star to read its light</p>
+    </div>
+  </section>
+
+  <!-- ============ FRIENDSHIP METER ============ -->
+  <section id="meter" class="scene" data-scene>
+    <div class="scene-inner meter-inner">
+      <p class="eyebrow" data-reveal>reading the brightness</p>
+      <h2 class="display-lg" data-reveal>Your friendship, measured in starlight.</h2>
+
+      <div class="meter-dial">
+        <svg viewBox="0 0 200 200" width="220" height="220">
+          <circle cx="100" cy="100" r="86" class="meter-track" />
+          <circle cx="100" cy="100" r="86" class="meter-fill" id="meter-fill" />
+        </svg>
+        <div class="meter-center">
+          <span class="meter-num" id="meter-num">0</span>
+          <span class="meter-percent">%</span>
+        </div>
+      </div>
+      <p class="meter-caption" id="meter-caption">gathering light from everything you answered&hellip;</p>
+      <button class="btn-primary" id="reveal-secret-btn" disabled>
+        <span>Unlock the last star</span>
+        <svg width="16" height="16" viewBox="0 0 16 16" fill="none"><path d="M3 8h10M9 4l4 4-4 4" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round"/></svg>
+      </button>
+    </div>
+  </section>
+
+  <!-- ============ SECRET ENDING ============ -->
+  <section id="secret" class="scene" data-scene>
+    <div class="scene-inner secret-inner">
+      <p class="eyebrow" data-reveal>the last star</p>
+      <h2 class="display-xl heart-title" id="heart-title" data-reveal>
+        <span class="line">Every star</span>
+        <span class="line">was always pointing</span>
+        <span class="line accent">to you, Pranjali.</span>
+      </h2>
+      <p class="lede" data-reveal>Happy Friendship Day &mdash; here's to the ones who never needed a reason. ❤️✨</p>
+      <button class="btn-primary btn-finale" id="finale-btn" data-reveal>
+        <span>Light the whole sky</span>
+      </button>
+      <p class="credit" data-reveal>Made with ❤️ by Nikhil</p>
+    </div>
+  </section>
+
+</main>
+
+<!-- ============ FINALE OVERLAY ============ -->
+<div class="finale-overlay" id="finale-overlay" aria-hidden="true">
+  <canvas id="fireworks-canvas"></canvas>
+  <canvas id="confetti-canvas"></canvas>
+  <div class="finale-content">
+    <p class="eyebrow">happy friendship day</p>
+    <h2 class="finale-name">Pranjali Singh</h2>
+    <p class="finale-line">Thank you for always being you. 💕</p>
+
+    <div class="photo-reel" id="photo-reel">
+      <div class="photo-reel-track">
+        <div class="reel-frame"><img data-photo="photo1" alt="Memory one" /></div>
+        <div class="reel-frame"><img data-photo="photo2" alt="Memory two" /></div>
+        <div class="reel-frame"><img data-photo="photo3" alt="Memory three" /></div>
+        <div class="reel-frame"><img data-photo="photo4" alt="Memory four" /></div>
+        <div class="reel-frame"><img data-photo="photo5" alt="Memory five" /></div>
+        <div class="reel-frame"><img data-photo="photo1" alt="Memory one" /></div>
+        <div class="reel-frame"><img data-photo="photo2" alt="Memory two" /></div>
+        <div class="reel-frame"><img data-photo="photo3" alt="Memory three" /></div>
+        <div class="reel-frame"><img data-photo="photo4" alt="Memory four" /></div>
+        <div class="reel-frame"><img data-photo="photo5" alt="Memory five" /></div>
+      </div>
+    </div>
+    <p class="reel-hint">hover the reel</p>
+
+    <p class="finale-credit">Made with ❤️ by Nikhil</p>
+    <button class="btn-ghost" id="finale-close">close the sky</button>
+  </div>
+</div>
+
+<script src="https://cdnjs.cloudflare.com/ajax/libs/gsap/3.12.5/gsap.min.js"></script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/gsap/3.12.5/ScrollTrigger.min.js"></script>
+<script src="script.js"></script>
+</body>
+</html>
